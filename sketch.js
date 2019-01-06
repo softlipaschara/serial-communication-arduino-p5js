@@ -1,10 +1,10 @@
 var serial; // variable to hold an instance of the serialport library
-var digitalWrite = false; // ellipse position
 var inputMessage;
+var shouldShowMessage = false;
 
 function setup() {
-  createCanvas(screen.width, screen.height);
-  serial = new p5.SerialPort(); // make a new instance of  serialport library
+  createCanvas(displayWidth, displayHeight);
+  serial = new p5.SerialPort("192.168.178.28"); // !!!!!!!!!change ip address here!!!!!!!!!!!!!
   serial.on('list', printList); // callback function for serialport list event
   serial.on('data', serialEvent); // callback for new data coming in
   // serial.list();
@@ -18,11 +18,13 @@ function setup() {
 }
 
 function draw() {
-  background("#2307AF");
+  background("black");
   fill(255);
-  if (inputMessage && inputMessage.length > 0) {
-    //ellipse(width / 2, height / 2, 20, 20);
-    text("Done!", width/2-20, height/2);
+  if (shouldShowMessage) {
+    textAlign(CENTER, CENTER);
+    text("Payment Done!\nEnjoy Your Coffee :) ",50,50);
+    textSize(30);
+    textFont('Roboto Slab');
   }
 }
 
@@ -59,10 +61,10 @@ function serialEvent(event) {
     inputMessage = inputMessage.trim();
     switch (inputMessage) {
       case 'done':
-        digitalWrite = true;
+        shouldShowMessage = true;
         break;
       default:
-        digitalWrite = false;
+        shouldShowMessage = true;
     }
 
     // digitalWrite = Boolean(inputMessage);
