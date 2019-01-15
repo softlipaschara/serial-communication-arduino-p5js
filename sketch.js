@@ -4,7 +4,7 @@ var shouldShowMessage = false;
 
 function setup() {
   createCanvas(displayWidth, displayHeight);
-  serial = new p5.SerialPort("192.168.178.28"); // !!!!!!!!!change ip address here!!!!!!!!!!!!!
+  serial = new p5.SerialPort("172.20.15.220"); // !!!!!!!!!change ip address here!!!!!!!!!!!!!
   serial.on('list', printList); // callback function for serialport list event
   serial.on('data', serialEvent); // callback for new data coming in
   // serial.list();
@@ -22,7 +22,7 @@ function draw() {
   fill(255);
   if (shouldShowMessage) {
     textAlign(CENTER, CENTER);
-    text("Payment Done!\nEnjoy Your Coffee :) ",50,50);
+    text("Payment Done!\nEnjoy Your Coffee :) ",displayWidth/2,displayHeight/2);
     textSize(30);
     textFont('Roboto Slab');
   }
@@ -60,14 +60,15 @@ function serialEvent(event) {
     console.log('inputMessage', inputMessage)
     inputMessage = inputMessage.trim();
     switch (inputMessage) {
-      case 'done':
-        shouldShowMessage = true;
-        break;
+      case '[transfer]done':
+        return shouldShowMessage = true;
+      case '[transfer]not Done':
+        return shouldShowMessage = false;
       default:
         shouldShowMessage = true;
     }
 
-    // digitalWrite = Boolean(inputMessage);
-    // println(sensorValue);
+
   }
+
 }
